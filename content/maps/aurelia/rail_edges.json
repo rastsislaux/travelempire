@@ -1,0 +1,18 @@
+[
+  {
+    "cityA": "city.capital",
+    "cityB": "city.port"
+  },
+  {
+    "cityA": "city.capital",
+    "cityB": "city.industrial"
+  },
+  {
+    "cityA": "city.capital",
+    "cityB": "city.border"
+  },
+  {
+    "cityA": "city.port",
+    "cityB": "city.border"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "city.capital",
+    "name": "Aurel",
+    "latitude": 53.9,
+    "longitude": 27.57,
+    "population": 1800000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": true
+  },
+  {
+    "id": "city.port",
+    "name": "Port Haven",
+    "latitude": 54.69,
+    "longitude": 25.28,
+    "population": 900000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": true
+  },
+  {
+    "id": "city.industrial",
+    "name": "Forgeford",
+    "latitude": 52.43,
+    "longitude": 31.0,
+    "population": 600000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false
+  },
+  {
+    "id": "city.university",
+    "name": "Scholar's Rest",
+    "latitude": 53.12,
+    "longitude": 26.02,
+    "population": 250000,
+    "hasBusTerminal": true,
+    "hasRailStation": false,
+    "hasAirport": false
+  },
+  {
+    "id": "city.border",
+    "name": "Westgate",
+    "latitude": 53.68,
+    "longitude": 23.83,
+    "population": 180000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false
+  },
+  {
+    "id": "city.resort",
+    "name": "Silver Coast",
+    "latitude": 55.72,
+    "longitude": 27.32,
+    "population": 120000,
+    "hasBusTerminal": true,
+    "hasRailStation": false,
+    "hasAirport": true
+  }
+]

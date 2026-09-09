@@ -59,12 +59,12 @@ A player can start a new game on **one hand-authored country**, see **several ci
 
 ## Acceptance checklist
 
-- [ ] Headless tests pass without Godot runtime.
-- [ ] Player can operate at least one bus route and see cash change over time.
-- [ ] Illegal train route (missing rail edge) is rejected with a clear message.
-- [ ] Air route requires airports at both ends.
-- [ ] Pause stops sim advancement; speed changes tick rate.
-- [ ] Docs still match implemented command set.
+- [x] Headless tests pass without Godot runtime.
+- [x] Player can operate at least one bus route and see cash change over time.
+- [x] Illegal train route (missing rail edge) is rejected with a clear message.
+- [x] Air route requires airports at both ends.
+- [x] Pause stops sim advancement; speed changes tick rate.
+- [x] Docs still match implemented command set.
 
 ## Post-MVP directions (ordered suggestions)
 

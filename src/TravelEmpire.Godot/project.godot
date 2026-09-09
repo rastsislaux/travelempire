@@ -1,0 +1,28 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; but this is fine for the MVP scaffold.
+
+config_version=5
+
+[application]
+
+config/name="TravelEmpire"
+config/description="Build a transport empire across Aurelia."
+run/main_scene="res://scenes/Main.tscn"
+config/features=PackedStringArray("4.3", "C#")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[dotnet]
+
+project/assembly_name="TravelEmpire.Godot"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.08, 0.12, 0.16, 1)
