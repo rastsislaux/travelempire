@@ -11,7 +11,10 @@ TravelEmpire design documentation. Read in order for onboarding; jump by topic w
 5. [Simulation](05-simulation.md) — headless core, ticks, commands
 6. [Interface](06-interface.md) — Godot presentation layer
 7. [Tooling & framework](07-tooling-and-framework.md) — Godot, C#, tests, tooling
-8. [MVP roadmap](08-mvp-roadmap.md) — first country, cities, routes
+8. [MVP roadmap](08-mvp-roadmap.md) — first country, cities, routes (done)
+9. [Next roadmap](09-next-roadmap.md) — UI polish, catalog progression, real countries
+
+Visual references: [`references/`](references/).
 
 ## Conventions
 
