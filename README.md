@@ -1,29 +1,58 @@
 # TravelEmpire
 
-A transport-empire management game built with **Godot** and **C#**. Build bus, rail, and air networks between cities, create routes, assign fleets, and grow a company across a geographic map.
+Godot 4 + C# transport-empire game. Build bus, rail, and air networks across a geographic map.
 
 ## Status
 
-Documentation-first. Implementation has not started. See [`docs/`](docs/README.md) for design, architecture, and tooling.
+**MVP v1** is implemented:
 
-## Core principles
+- Headless C# simulation (commands, demand, movement, revenue)
+- Unit/integration tests
+- Godot 4 map UI (buy vehicles, create routes, assign fleet, pause/speed)
+- Console host for headless smoke demos
 
-- **Simulation ↔ interface separation** — game rules and state live in a headless C# simulation; Godot is the presentation and input shell.
-- **Geographic map** — cities with real coordinates; start with one country, expand toward a world map.
-- **Multi-modal transport** — buses, trains, and airplanes sharing the same economic and routing model.
+Docs: [`docs/`](docs/README.md)
 
-## Docs quick links
+## Quick start
 
-| Document | Topic |
-|----------|--------|
-| [Vision & scope](docs/01-vision-and-scope.md) | Fantasy, pillars, out-of-scope |
-| [Architecture](docs/02-architecture.md) | Layers, boundaries, project layout |
-| [Game mechanics](docs/03-game-mechanics.md) | Economy, demand, routes, vehicles |
-| [Data model](docs/04-data-model.md) | Entities, IDs, persistence shapes |
-| [Simulation](docs/05-simulation.md) | Tick loop, commands, queries |
-| [Interface](docs/06-interface.md) | Godot UI, map, presentation |
-| [Tooling & framework](docs/07-tooling-and-framework.md) | Engine, .NET, tests, CI |
-| [MVP roadmap](docs/08-mvp-roadmap.md) | First playable slice |
+### Requirements
+
+- .NET 8 SDK
+- Godot **4.3** .NET (Mono) build
+
+### Tests & console demo
+
+```bash
+dotnet test
+dotnet run --project src/TravelEmpire.ConsoleHost -- -t 500
+```
+
+### Godot UI
+
+1. Open `src/TravelEmpire.Godot/project.godot` in Godot 4.3 .NET.
+2. Wait for C# restore/build if prompted.
+3. Press Play.
+
+Gameplay loop:
+
+1. Buy a **Standard Coach** from the catalog.
+2. Click two cities (e.g. Aurel → Scholar's Rest) and **Create** a bus route.
+3. Select the vehicle + route → **Assign**.
+4. Unpause / set speed and watch cash, passengers, and vehicles move.
+
+## Architecture
+
+```
+TravelEmpire.Godot / ConsoleHost  →  commands + snapshots
+                ↓
+        TravelEmpire.Simulation   (pure C#, no Godot)
+```
+
+See [docs/02-architecture.md](docs/02-architecture.md).
+
+## Content
+
+Built-in pack **Republic of Aurelia** (6 cities). JSON mirrors live under `content/`.
 
 ## License
 
