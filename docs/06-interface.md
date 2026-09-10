@@ -16,22 +16,19 @@ The interface layer is a **Godot 4** project using **C#** scripts. It presents s
 
 ```text
 Main
-├── MapViewport
-│   ├── MapBackground          # country outline / terrain texture
-│   ├── CityLayer              # markers + labels
-│   ├── RouteLayer             # polylines by mode color
-│   └── VehicleLayer           # icons interpolated along edges
+├── MapViewport                # hero map (cities, routes, vehicles)
 ├── Hud
 │   ├── TopBar                 # cash, clock, speed controls
-│   ├── SidePanel              # context: city / route / vehicle
-│   └── Alerts
-├── Dialogs
-│   ├── NewGame
-│   ├── RouteEditor
-│   ├── BuyVehicle
-│   └── Confirm
+│   └── SidePanel
+│         ├── Selection        # compact city inspector
+│         └── TabContainer
+│               ├── Buy        # catalog table + buy action
+│               ├── Fleet      # owned vehicles table + assign
+│               └── Routes     # routes table + create-route form
 └── SimulationHost             # Node owning Simulation instance
 ```
+
+Buy / Fleet / Routes use column tables (`Tree`). List rebuilds happen on command results only so selection is not cleared every sim tick.
 
 `SimulationHost` is the only node that should construct and tick `Simulation`.
 

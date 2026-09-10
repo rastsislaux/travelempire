@@ -80,8 +80,14 @@ public partial class MapView : Control
                 ? new Color(0.98f, 0.85f, 0.35f)
                 : new Color(0.92f, 0.94f, 0.96f));
             DrawCircle(screen, selected ? 6 : 4, new Color(0.15f, 0.25f, 0.32f));
-            DrawString(font, screen + new Vector2(10, 4), city.Name, HorizontalAlignment.Left, -1, 14,
-                new Color(0.90f, 0.93f, 0.95f));
+            DrawString(
+                font,
+                screen + new Vector2(10, 4),
+                city.Name,
+                HorizontalAlignment.Left,
+                -1,
+                14,
+                Colors.White.Lightened(0.85f));
         }
     }
 
