@@ -11,7 +11,7 @@ Godot 4 + C# transport-empire game. Build bus, rail, and air networks across a g
 - Godot 4 map UI (buy vehicles, create routes, assign fleet, pause/speed)
 - Console host for headless smoke demos
 
-Docs: [`docs/`](docs/README.md)
+Docs: [`docs/`](docs/README.md) · Next: [`docs/09-next-roadmap.md`](docs/09-next-roadmap.md)
 
 ## Quick start
 
