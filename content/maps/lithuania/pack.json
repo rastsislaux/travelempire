@@ -1,0 +1,9 @@
+{
+  "id": "lithuania",
+  "name": "Republic of Lithuania",
+  "minLatitude": 53.8,
+  "maxLatitude": 56.5,
+  "minLongitude": 20.8,
+  "maxLongitude": 26.9,
+  "backgroundAsset": "art/background.png"
+}

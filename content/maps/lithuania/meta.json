@@ -1,0 +1,8 @@
+{
+  "sources": [
+    "City coordinates: approximate WGS84 centroids (public geographic data).",
+    "Populations: rounded 2020s municipal estimates for gameplay balance, not a census dump.",
+    "Rail edges: curated major corridors for route decisions, not the full national graph."
+  ],
+  "licenseNotes": "Hand-authored gameplay pack. Do not redistribute third-party map tiles."
+}

@@ -4,8 +4,14 @@ public sealed class MapPack
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
+    public string? BackgroundAsset { get; init; }
+    public double? MinLatitude { get; init; }
+    public double? MaxLatitude { get; init; }
+    public double? MinLongitude { get; init; }
+    public double? MaxLongitude { get; init; }
     public required IReadOnlyList<CityDefinition> Cities { get; init; }
     public required IReadOnlyList<RailEdgeDefinition> RailEdges { get; init; }
+    public IReadOnlyList<MapLabelDefinition> Labels { get; init; } = [];
 }
 
 public sealed class CityDefinition
@@ -18,6 +24,7 @@ public sealed class CityDefinition
     public bool HasBusTerminal { get; init; } = true;
     public bool HasRailStation { get; init; }
     public bool HasAirport { get; init; }
+    public bool HasSeaport { get; init; }
 }
 
 public sealed class RailEdgeDefinition
@@ -25,6 +32,14 @@ public sealed class RailEdgeDefinition
     public required string CityA { get; init; }
     public required string CityB { get; init; }
     public double? LengthKm { get; init; }
+}
+
+public sealed class MapLabelDefinition
+{
+    public required string Text { get; init; }
+    public required double Latitude { get; init; }
+    public required double Longitude { get; init; }
+    public string Style { get; init; } = "neighbour";
 }
 
 public sealed class VehicleTypeDefinition
@@ -38,6 +53,9 @@ public sealed class VehicleTypeDefinition
     public required long OperatingCostPerKmMinor { get; init; }
     public long OperatingCostPerHourMinor { get; init; }
     public double? MaxRangeKm { get; init; }
+    public int Tier { get; init; } = 1;
+    public int RequiresCitiesServed { get; init; }
+    public long RequiresCumulativePassengers { get; init; }
 }
 
 public sealed class VehicleCatalog
@@ -53,4 +71,12 @@ public sealed class VehicleCatalog
         type = Types.FirstOrDefault(t => t.Id == id.Value)!;
         return type is not null;
     }
+}
+
+public sealed class MapPackInfo
+{
+    public required string Id { get; init; }
+    public required string Name { get; init; }
+    public required int CityCount { get; init; }
+    public required bool IsTutorial { get; init; }
 }

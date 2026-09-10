@@ -23,6 +23,8 @@ public sealed class Simulation
     }
 
     public bool HasGame => _state?.Company is not null;
+    public string MapPackId => _mapPack.Id;
+    public string MapPackName => _mapPackName ?? _mapPack.Name;
 
     public CommandResult Apply(ICommand command) => command switch
     {
@@ -51,6 +53,11 @@ public sealed class Simulation
             {
                 MapPackId = _mapPack.Id,
                 MapPackName = _mapPackName ?? _mapPack.Name,
+                BackgroundAsset = _mapPack.BackgroundAsset,
+                MinLatitude = _mapPack.MinLatitude,
+                MaxLatitude = _mapPack.MaxLatitude,
+                MinLongitude = _mapPack.MinLongitude,
+                MaxLongitude = _mapPack.MaxLongitude,
                 TickIndex = 0,
                 SimHours = 0,
                 Company = null,
@@ -63,25 +70,35 @@ public sealed class Simulation
                     Population = c.Population,
                     HasBusTerminal = c.HasBusTerminal,
                     HasRailStation = c.HasRailStation,
-                    HasAirport = c.HasAirport
+                    HasAirport = c.HasAirport,
+                    HasSeaport = c.HasSeaport
                 }).ToList(),
                 Routes = [],
                 Vehicles = [],
-                Catalog = _catalog.Types.Select(ToTypeView).ToList(),
+                Catalog = _catalog.Types.Select(t => ToTypeView(t, unlocked: true)).ToList(),
                 RailEdges = _mapPack.RailEdges.Select(e => new RailEdgeView
                 {
                     CityA = e.CityA,
                     CityB = e.CityB,
                     LengthKm = e.LengthKm ?? 0
-                }).ToList()
+                }).ToList(),
+                Labels = _mapPack.Labels.Select(ToLabelView).ToList()
             };
         }
 
         var company = _state.Company;
+        var citiesServed = company?.CitiesServed ?? 0;
+        var passengers = company?.CumulativePassengers ?? 0;
+
         return new GameSnapshot
         {
             MapPackId = _state.MapPackId,
             MapPackName = _mapPackName ?? _mapPack.Name,
+            BackgroundAsset = _state.BackgroundAsset,
+            MinLatitude = _state.MinLatitude,
+            MaxLatitude = _state.MaxLatitude,
+            MinLongitude = _state.MinLongitude,
+            MaxLongitude = _state.MaxLongitude,
             TickIndex = _state.Clock.TickIndex,
             SimHours = _state.Clock.SimHours,
             Company = company is null ? null : new CompanyView
@@ -90,7 +107,8 @@ public sealed class Simulation
                 Name = company.Name,
                 CashMinor = company.Cash.MinorUnits,
                 CumulativePassengers = company.CumulativePassengers,
-                CumulativeRevenueMinor = company.CumulativeRevenue.MinorUnits
+                CumulativeRevenueMinor = company.CumulativeRevenue.MinorUnits,
+                CitiesServed = company.CitiesServed
             },
             Cities = _state.Cities.Select(c => new CityView
             {
@@ -101,18 +119,11 @@ public sealed class Simulation
                 Population = c.Population,
                 HasBusTerminal = c.HasBusTerminal,
                 HasRailStation = c.HasRailStation,
-                HasAirport = c.HasAirport
+                HasAirport = c.HasAirport,
+                HasSeaport = c.HasSeaport,
+                Demand = _state.Demand.BuildCityDemand(c, _state.Cities, _state)
             }).ToList(),
-            Routes = company?.Routes.Select(r => new RouteView
-            {
-                Id = r.Id.Value,
-                Name = r.Name,
-                Mode = r.Mode,
-                StopIds = r.Stops.Select(s => s.Value).ToList(),
-                PricePerKmMinor = r.PricePerKm.MinorUnits,
-                VehicleIds = r.VehicleIds.ToList(),
-                IsActive = r.IsActive
-            }).ToList() ?? [],
+            Routes = company?.Routes.Select(r => ToRouteView(r, company)).ToList() ?? [],
             Vehicles = company?.Vehicles.Select(v => new VehicleView
             {
                 Id = v.Id.Value,
@@ -128,13 +139,14 @@ public sealed class Simulation
                 Progress = v.Progress,
                 OnboardPassengers = v.OnboardPassengers
             }).ToList() ?? [],
-            Catalog = _catalog.Types.Select(ToTypeView).ToList(),
+            Catalog = _catalog.Types.Select(t => ToTypeView(t, IsUnlocked(t, citiesServed, passengers))).ToList(),
             RailEdges = _state.RailEdges.Select(e => new RailEdgeView
             {
                 CityA = e.A.Value,
                 CityB = e.B.Value,
                 LengthKm = e.LengthKm
-            }).ToList()
+            }).ToList(),
+            Labels = _state.Labels.Select(ToLabelView).ToList()
         };
     }
 
@@ -142,6 +154,15 @@ public sealed class Simulation
     {
         EnsureGame();
         return RouteRules.ValidateStops(_state!, mode, stops);
+    }
+
+    public static bool IsUnlocked(VehicleTypeDefinition type, int citiesServed, long cumulativePassengers)
+    {
+        if (citiesServed < type.RequiresCitiesServed)
+            return false;
+        if (cumulativePassengers < type.RequiresCumulativePassengers)
+            return false;
+        return true;
     }
 
     private CommandResult ApplyNewGame(NewGameCommand command)
@@ -155,7 +176,8 @@ public sealed class Simulation
             Population = c.Population,
             HasBusTerminal = c.HasBusTerminal,
             HasRailStation = c.HasRailStation,
-            HasAirport = c.HasAirport
+            HasAirport = c.HasAirport,
+            HasSeaport = c.HasSeaport
         }).ToList();
 
         var rails = _mapPack.RailEdges.Select(e =>
@@ -179,6 +201,12 @@ public sealed class Simulation
             RailEdges = rails,
             Demand = DemandModel.Build(cities, _config),
             Clock = new GameClock(),
+            Labels = _mapPack.Labels,
+            BackgroundAsset = _mapPack.BackgroundAsset,
+            MinLatitude = _mapPack.MinLatitude,
+            MaxLatitude = _mapPack.MaxLatitude,
+            MinLongitude = _mapPack.MinLongitude,
+            MaxLongitude = _mapPack.MaxLongitude,
             RngSeed = command.Seed,
             Company = new Company
             {
@@ -200,6 +228,17 @@ public sealed class Simulation
 
         if (!state.Catalog.TryGet(command.TypeId, out var type))
             return CommandResult.Fail("vehicle.unknown_type", $"Unknown vehicle type '{command.TypeId}'.");
+
+        if (!IsUnlocked(type, company.CitiesServed, company.CumulativePassengers))
+        {
+            var reasons = new List<string>();
+            if (company.CitiesServed < type.RequiresCitiesServed)
+                reasons.Add($"serve {type.RequiresCitiesServed} cities (have {company.CitiesServed})");
+            if (company.CumulativePassengers < type.RequiresCumulativePassengers)
+                reasons.Add($"carry {type.RequiresCumulativePassengers:N0} passengers (have {company.CumulativePassengers:N0})");
+            return CommandResult.Fail("vehicle.locked",
+                $"{type.DisplayName} is locked — {string.Join(" and ", reasons)}.");
+        }
 
         var cost = new Money(type.PurchaseCostMinor);
         if (company.Cash < cost)
@@ -249,6 +288,7 @@ public sealed class Simulation
             IsActive = true
         };
         company.Routes.Add(route);
+        MarkCitiesServed(company, stops);
         return CommandResult.Ok();
     }
 
@@ -266,6 +306,7 @@ public sealed class Simulation
             var validation = RouteRules.ValidateStops(_state, route.Mode, command.Stops);
             if (!validation.Success) return validation;
             route.Stops = command.Stops.ToList();
+            MarkCitiesServed(company, route.Stops);
         }
 
         if (command.Name is not null)
@@ -363,6 +404,12 @@ public sealed class Simulation
         return CommandResult.Ok();
     }
 
+    private static void MarkCitiesServed(Company company, IEnumerable<CityId> stops)
+    {
+        foreach (var stop in stops)
+            company.ServedCityIds.Add(stop.Value);
+    }
+
     private static void TickOnce(GameState state)
     {
         var company = state.Company!;
@@ -450,6 +497,7 @@ public sealed class Simulation
             vehicle.CollectedFarePerPassenger = Money.Zero;
         }
 
+        company.ServedCityIds.Add(destination.Value);
         vehicle.AtCityId = destination;
         vehicle.FromCityId = null;
         vehicle.ToCityId = null;
@@ -470,8 +518,6 @@ public sealed class Simulation
         var available = state.Demand.PassengersPerDay(from, to)
                         * (state.Config.HoursPerTick / 24.0)
                         * fareMultiplier;
-        // Scale up boarding window: vehicles board for the demand accumulated over roughly turnaround+leg isn't tracked;
-        // use a practical multiplier so infrequent vehicles still fill (demand per departure ~ half-day slice).
         available *= Math.Max(1.0, 6.0 / Math.Max(state.Config.HoursPerTick, 0.01));
 
         var boarded = (int)Math.Floor(Math.Min(available, vehicle.CapacityPassengers));
@@ -486,7 +532,24 @@ public sealed class Simulation
         return raw < config.MinFare ? config.MinFare : raw;
     }
 
-    private static VehicleTypeView ToTypeView(VehicleTypeDefinition type) => new()
+    private static RouteView ToRouteView(Route route, Company company)
+    {
+        var assigned = company.Vehicles.Where(v => route.VehicleIds.Contains(v.Id.Value)).ToList();
+        return new RouteView
+        {
+            Id = route.Id.Value,
+            Name = route.Name,
+            Mode = route.Mode,
+            StopIds = route.Stops.Select(s => s.Value).ToList(),
+            PricePerKmMinor = route.PricePerKm.MinorUnits,
+            VehicleIds = route.VehicleIds.ToList(),
+            IsActive = route.IsActive,
+            LiveLoadPassengers = assigned.Sum(v => v.OnboardPassengers),
+            LiveCapacityPassengers = assigned.Sum(v => v.CapacityPassengers)
+        };
+    }
+
+    private static VehicleTypeView ToTypeView(VehicleTypeDefinition type, bool unlocked) => new()
     {
         Id = type.Id,
         Mode = type.Mode,
@@ -494,6 +557,20 @@ public sealed class Simulation
         CapacityPassengers = type.CapacityPassengers,
         CruiseSpeedKmh = type.CruiseSpeedKmh,
         PurchaseCostMinor = type.PurchaseCostMinor,
-        OperatingCostPerKmMinor = type.OperatingCostPerKmMinor
+        OperatingCostPerKmMinor = type.OperatingCostPerKmMinor,
+        OperatingCostPerHourMinor = type.OperatingCostPerHourMinor,
+        MaxRangeKm = type.MaxRangeKm,
+        Tier = type.Tier,
+        RequiresCitiesServed = type.RequiresCitiesServed,
+        RequiresCumulativePassengers = type.RequiresCumulativePassengers,
+        IsUnlocked = unlocked
+    };
+
+    private static MapLabelView ToLabelView(MapLabelDefinition label) => new()
+    {
+        Text = label.Text,
+        Latitude = label.Latitude,
+        Longitude = label.Longitude,
+        Style = label.Style
     };
 }

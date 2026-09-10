@@ -1,4 +1,8 @@
 {
   "id": "aurelia",
-  "name": "Republic of Aurelia"
+  "name": "Republic of Aurelia",
+  "minLatitude": 52.0,
+  "maxLatitude": 56.2,
+  "minLongitude": 23.0,
+  "maxLongitude": 31.5
 }

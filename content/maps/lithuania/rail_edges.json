@@ -1,0 +1,12 @@
+[
+  { "cityA": "city.vilnius", "cityB": "city.kaunas" },
+  { "cityA": "city.kaunas", "cityB": "city.klaipeda" },
+  { "cityA": "city.vilnius", "cityB": "city.panevezys" },
+  { "cityA": "city.panevezys", "cityB": "city.siauliai" },
+  { "cityA": "city.siauliai", "cityB": "city.mazeikiai" },
+  { "cityA": "city.kaunas", "cityB": "city.marijampole" },
+  { "cityA": "city.kaunas", "cityB": "city.alytus" },
+  { "cityA": "city.vilnius", "cityB": "city.jonava" },
+  { "cityA": "city.jonava", "cityB": "city.kedainiai" },
+  { "cityA": "city.kedainiai", "cityB": "city.siauliai" }
+]

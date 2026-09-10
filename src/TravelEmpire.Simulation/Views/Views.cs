@@ -4,6 +4,11 @@ public sealed class GameSnapshot
 {
     public required string MapPackId { get; init; }
     public required string MapPackName { get; init; }
+    public string? BackgroundAsset { get; init; }
+    public double? MinLatitude { get; init; }
+    public double? MaxLatitude { get; init; }
+    public double? MinLongitude { get; init; }
+    public double? MaxLongitude { get; init; }
     public required long TickIndex { get; init; }
     public required double SimHours { get; init; }
     public required CompanyView? Company { get; init; }
@@ -12,6 +17,7 @@ public sealed class GameSnapshot
     public required IReadOnlyList<VehicleView> Vehicles { get; init; }
     public required IReadOnlyList<VehicleTypeView> Catalog { get; init; }
     public required IReadOnlyList<RailEdgeView> RailEdges { get; init; }
+    public IReadOnlyList<MapLabelView> Labels { get; init; } = [];
 }
 
 public sealed class CompanyView
@@ -21,6 +27,7 @@ public sealed class CompanyView
     public required long CashMinor { get; init; }
     public required long CumulativePassengers { get; init; }
     public required long CumulativeRevenueMinor { get; init; }
+    public required int CitiesServed { get; init; }
 }
 
 public sealed class CityView
@@ -33,6 +40,18 @@ public sealed class CityView
     public required bool HasBusTerminal { get; init; }
     public required bool HasRailStation { get; init; }
     public required bool HasAirport { get; init; }
+    public required bool HasSeaport { get; init; }
+    public CityDemandView? Demand { get; init; }
+}
+
+public sealed class CityDemandView
+{
+    public required double LocalTransportPerDay { get; init; }
+    public required double IntercityPerDay { get; init; }
+    public required double AirTravelPerDay { get; init; }
+    public required double BusShare { get; init; }
+    public required double RailShare { get; init; }
+    public required double AirShare { get; init; }
 }
 
 public sealed class RouteView
@@ -44,6 +63,8 @@ public sealed class RouteView
     public required long PricePerKmMinor { get; init; }
     public required IReadOnlyList<long> VehicleIds { get; init; }
     public required bool IsActive { get; init; }
+    public required int LiveLoadPassengers { get; init; }
+    public required int LiveCapacityPassengers { get; init; }
 }
 
 public sealed class VehicleView
@@ -71,6 +92,12 @@ public sealed class VehicleTypeView
     public required double CruiseSpeedKmh { get; init; }
     public required long PurchaseCostMinor { get; init; }
     public required long OperatingCostPerKmMinor { get; init; }
+    public required long OperatingCostPerHourMinor { get; init; }
+    public double? MaxRangeKm { get; init; }
+    public required int Tier { get; init; }
+    public required int RequiresCitiesServed { get; init; }
+    public required long RequiresCumulativePassengers { get; init; }
+    public required bool IsUnlocked { get; init; }
 }
 
 public sealed class RailEdgeView
@@ -78,4 +105,12 @@ public sealed class RailEdgeView
     public required string CityA { get; init; }
     public required string CityB { get; init; }
     public required double LengthKm { get; init; }
+}
+
+public sealed class MapLabelView
+{
+    public required string Text { get; init; }
+    public required double Latitude { get; init; }
+    public required double Longitude { get; init; }
+    public required string Style { get; init; }
 }

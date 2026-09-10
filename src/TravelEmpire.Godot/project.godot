@@ -7,7 +7,7 @@ config_version=5
 [application]
 
 config/name="TravelEmpire"
-config/description="Build a transport empire across Aurelia."
+config/description="Build a transport empire across real countries and tutorial maps."
 run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.7", "C#")
 config/icon="res://icon.svg"
