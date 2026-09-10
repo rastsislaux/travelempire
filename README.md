@@ -17,8 +17,8 @@ Docs: [`docs/`](docs/README.md)
 
 ### Requirements
 
-- .NET 8 SDK
-- Godot **4.3** .NET (Mono) build
+- .NET SDK **8+** (10.x is fine; `global.json` rolls forward)
+- Godot **4.7** .NET build
 
 ### Tests & console demo
 
@@ -29,7 +29,7 @@ dotnet run --project src/TravelEmpire.ConsoleHost -- -t 500
 
 ### Godot UI
 
-1. Open `src/TravelEmpire.Godot/project.godot` in Godot 4.3 .NET.
+1. Open `src/TravelEmpire.Godot/project.godot` in Godot 4.7 .NET.
 2. Wait for C# restore/build if prompted.
 3. Press Play.
 
