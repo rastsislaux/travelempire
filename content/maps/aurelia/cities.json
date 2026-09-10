@@ -7,7 +7,8 @@
     "population": 1800000,
     "hasBusTerminal": true,
     "hasRailStation": true,
-    "hasAirport": true
+    "hasAirport": true,
+    "hasSeaport": false
   },
   {
     "id": "city.port",
@@ -17,7 +18,8 @@
     "population": 900000,
     "hasBusTerminal": true,
     "hasRailStation": true,
-    "hasAirport": true
+    "hasAirport": true,
+    "hasSeaport": true
   },
   {
     "id": "city.industrial",
@@ -27,7 +29,8 @@
     "population": 600000,
     "hasBusTerminal": true,
     "hasRailStation": true,
-    "hasAirport": false
+    "hasAirport": false,
+    "hasSeaport": false
   },
   {
     "id": "city.university",
@@ -37,7 +40,8 @@
     "population": 250000,
     "hasBusTerminal": true,
     "hasRailStation": false,
-    "hasAirport": false
+    "hasAirport": false,
+    "hasSeaport": false
   },
   {
     "id": "city.border",
@@ -47,7 +51,8 @@
     "population": 180000,
     "hasBusTerminal": true,
     "hasRailStation": true,
-    "hasAirport": false
+    "hasAirport": false,
+    "hasSeaport": false
   },
   {
     "id": "city.resort",
@@ -57,6 +62,7 @@
     "population": 120000,
     "hasBusTerminal": true,
     "hasRailStation": false,
-    "hasAirport": true
+    "hasAirport": true,
+    "hasSeaport": false
   }
 ]

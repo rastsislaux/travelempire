@@ -1,13 +1,40 @@
 [
   {
-    "id": "bus.standard",
+    "id": "bus.city",
     "mode": "bus",
-    "displayName": "Standard Coach",
-    "capacityPassengers": 50,
+    "displayName": "City Bus",
+    "capacityPassengers": 40,
+    "cruiseSpeedKmh": 60,
+    "purchaseCostMinor": 12000000,
+    "operatingCostPerKmMinor": 55,
+    "operatingCostPerHourMinor": 1100,
+    "maxRangeKm": 180,
+    "tier": 1
+  },
+  {
+    "id": "bus.coach",
+    "mode": "bus",
+    "displayName": "Intercity Coach",
+    "capacityPassengers": 55,
     "cruiseSpeedKmh": 80,
     "purchaseCostMinor": 25000000,
     "operatingCostPerKmMinor": 80,
-    "operatingCostPerHourMinor": 1500
+    "operatingCostPerHourMinor": 1500,
+    "maxRangeKm": 600,
+    "tier": 1
+  },
+  {
+    "id": "bus.articulated",
+    "mode": "bus",
+    "displayName": "Articulated Bus",
+    "capacityPassengers": 85,
+    "cruiseSpeedKmh": 55,
+    "purchaseCostMinor": 42000000,
+    "operatingCostPerKmMinor": 95,
+    "operatingCostPerHourMinor": 1900,
+    "maxRangeKm": 220,
+    "tier": 2,
+    "requiresCitiesServed": 3
   },
   {
     "id": "train.regional",
@@ -17,7 +44,45 @@
     "cruiseSpeedKmh": 140,
     "purchaseCostMinor": 180000000,
     "operatingCostPerKmMinor": 350,
-    "operatingCostPerHourMinor": 8000
+    "operatingCostPerHourMinor": 8000,
+    "tier": 1
+  },
+  {
+    "id": "train.intercity",
+    "mode": "train",
+    "displayName": "Intercity Express",
+    "capacityPassengers": 280,
+    "cruiseSpeedKmh": 180,
+    "purchaseCostMinor": 310000000,
+    "operatingCostPerKmMinor": 480,
+    "operatingCostPerHourMinor": 12000,
+    "tier": 2,
+    "requiresCitiesServed": 3
+  },
+  {
+    "id": "train.high_capacity",
+    "mode": "train",
+    "displayName": "High-Capacity Set",
+    "capacityPassengers": 420,
+    "cruiseSpeedKmh": 130,
+    "purchaseCostMinor": 480000000,
+    "operatingCostPerKmMinor": 620,
+    "operatingCostPerHourMinor": 16000,
+    "tier": 3,
+    "requiresCitiesServed": 5,
+    "requiresCumulativePassengers": 5000
+  },
+  {
+    "id": "air.turboprop",
+    "mode": "air",
+    "displayName": "Turboprop",
+    "capacityPassengers": 60,
+    "cruiseSpeedKmh": 480,
+    "purchaseCostMinor": 160000000,
+    "operatingCostPerKmMinor": 520,
+    "operatingCostPerHourMinor": 14000,
+    "maxRangeKm": 1200,
+    "tier": 1
   },
   {
     "id": "air.regional_jet",
@@ -28,6 +93,21 @@
     "purchaseCostMinor": 320000000,
     "operatingCostPerKmMinor": 900,
     "operatingCostPerHourMinor": 25000,
-    "maxRangeKm": 2500
+    "maxRangeKm": 2500,
+    "tier": 1
+  },
+  {
+    "id": "air.narrowbody",
+    "mode": "air",
+    "displayName": "Narrowbody",
+    "capacityPassengers": 160,
+    "cruiseSpeedKmh": 820,
+    "purchaseCostMinor": 680000000,
+    "operatingCostPerKmMinor": 1400,
+    "operatingCostPerHourMinor": 42000,
+    "maxRangeKm": 4500,
+    "tier": 3,
+    "requiresCitiesServed": 5,
+    "requiresCumulativePassengers": 8000
   }
 ]

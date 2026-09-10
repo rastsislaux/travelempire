@@ -1,0 +1,134 @@
+[
+  {
+    "id": "city.vilnius",
+    "name": "Vilnius",
+    "latitude": 54.6872,
+    "longitude": 25.2797,
+    "population": 581000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": true,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.kaunas",
+    "name": "Kaunas",
+    "latitude": 54.8985,
+    "longitude": 23.9036,
+    "population": 299000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": true,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.klaipeda",
+    "name": "Klaipėda",
+    "latitude": 55.7033,
+    "longitude": 21.1443,
+    "population": 152000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false,
+    "hasSeaport": true
+  },
+  {
+    "id": "city.siauliai",
+    "name": "Šiauliai",
+    "latitude": 55.9349,
+    "longitude": 23.3137,
+    "population": 101000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.panevezys",
+    "name": "Panevėžys",
+    "latitude": 55.7344,
+    "longitude": 24.3578,
+    "population": 85000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.alytus",
+    "name": "Alytus",
+    "latitude": 54.3964,
+    "longitude": 24.0459,
+    "population": 50000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.marijampole",
+    "name": "Marijampolė",
+    "latitude": 54.5599,
+    "longitude": 23.3541,
+    "population": 35000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.mazeikiai",
+    "name": "Mažeikiai",
+    "latitude": 56.3092,
+    "longitude": 22.3397,
+    "population": 32000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.jonava",
+    "name": "Jonava",
+    "latitude": 55.08,
+    "longitude": 24.28,
+    "population": 27000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.utena",
+    "name": "Utena",
+    "latitude": 55.4977,
+    "longitude": 25.5994,
+    "population": 25000,
+    "hasBusTerminal": true,
+    "hasRailStation": false,
+    "hasAirport": false,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.kedainiai",
+    "name": "Kėdainiai",
+    "latitude": 55.2889,
+    "longitude": 23.9722,
+    "population": 23000,
+    "hasBusTerminal": true,
+    "hasRailStation": true,
+    "hasAirport": false,
+    "hasSeaport": false
+  },
+  {
+    "id": "city.palanga",
+    "name": "Palanga",
+    "latitude": 55.9172,
+    "longitude": 21.0686,
+    "population": 18000,
+    "hasBusTerminal": true,
+    "hasRailStation": false,
+    "hasAirport": true,
+    "hasSeaport": false
+  }
+]

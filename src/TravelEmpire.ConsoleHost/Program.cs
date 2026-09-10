@@ -22,7 +22,7 @@ public static class Program
             Console.WriteLine($"  - {city.Name} pop={city.Population:N0}");
         Console.WriteLine();
 
-        Must(sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.standard") }));
+        Must(sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.coach") }));
         Must(sim.Apply(new CreateRouteCommand
         {
             Name = "Capital Shuttle",

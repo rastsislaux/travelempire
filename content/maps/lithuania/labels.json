@@ -1,0 +1,6 @@
+[
+  { "text": "Latvia", "latitude": 56.35, "longitude": 24.5, "style": "neighbour" },
+  { "text": "Belarus", "latitude": 54.2, "longitude": 26.5, "style": "neighbour" },
+  { "text": "Poland", "latitude": 54.05, "longitude": 22.8, "style": "neighbour" },
+  { "text": "Baltic Sea", "latitude": 55.6, "longitude": 20.95, "style": "water" }
+]

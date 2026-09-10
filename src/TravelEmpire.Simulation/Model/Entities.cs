@@ -10,6 +10,7 @@ public sealed class City
     public bool HasBusTerminal { get; init; } = true;
     public bool HasRailStation { get; init; }
     public bool HasAirport { get; init; }
+    public bool HasSeaport { get; init; }
 }
 
 public sealed class RailEdge
@@ -72,6 +73,9 @@ public sealed class Company
     public List<Route> Routes { get; } = [];
     public long CumulativePassengers { get; set; }
     public Money CumulativeRevenue { get; set; }
+    public HashSet<string> ServedCityIds { get; } = [];
+
+    public int CitiesServed => ServedCityIds.Count;
 }
 
 public sealed class GameClock

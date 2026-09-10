@@ -1,6 +1,6 @@
 using TravelEmpire.Simulation.Content;
 using TravelEmpire.Simulation.Geography;
-using TravelEmpire.Simulation.Model;
+using TravelEmpire.Simulation.Views;
 
 namespace TravelEmpire.Simulation.Model;
 
@@ -31,6 +31,75 @@ public sealed class DemandModel
 
     public double PassengersPerDay(CityId from, CityId to) =>
         _passengersPerDay.TryGetValue((from.Value, to.Value), out var v) ? v : 0;
+
+    public CityDemandView BuildCityDemand(City city, IReadOnlyList<City> cities, GameState state)
+    {
+        double local = 0;
+        double intercity = 0;
+        double air = 0;
+        double busWeight = 0;
+        double railWeight = 0;
+        double airWeight = 0;
+
+        foreach (var other in cities)
+        {
+            if (other.Id.Value == city.Id.Value) continue;
+            var od = PassengersPerDay(city.Id, other.Id) + PassengersPerDay(other.Id, city.Id);
+            if (od <= 0) continue;
+
+            var distance = state.DistanceKm(city.Id, other.Id);
+            var bothAirports = city.HasAirport && other.HasAirport;
+            var longEnoughForAir = distance >= state.Config.MinAirDistanceKm;
+
+            if (bothAirports && longEnoughForAir)
+            {
+                air += od * 0.35;
+                airWeight += od * 0.35;
+                var land = od * 0.65;
+                if (distance < 100)
+                    local += land;
+                else
+                    intercity += land;
+                AccumulateModeWeights(city, other, land, ref busWeight, ref railWeight, ref airWeight);
+            }
+            else if (distance < 100)
+            {
+                local += od;
+                AccumulateModeWeights(city, other, od, ref busWeight, ref railWeight, ref airWeight);
+            }
+            else
+            {
+                intercity += od;
+                AccumulateModeWeights(city, other, od, ref busWeight, ref railWeight, ref airWeight);
+            }
+        }
+
+        var modeTotal = busWeight + railWeight + airWeight;
+        return new CityDemandView
+        {
+            LocalTransportPerDay = local,
+            IntercityPerDay = intercity,
+            AirTravelPerDay = air,
+            BusShare = modeTotal <= 0 ? 0 : busWeight / modeTotal,
+            RailShare = modeTotal <= 0 ? 0 : railWeight / modeTotal,
+            AirShare = modeTotal <= 0 ? 0 : airWeight / modeTotal
+        };
+    }
+
+    private static void AccumulateModeWeights(
+        City a,
+        City b,
+        double weight,
+        ref double bus,
+        ref double rail,
+        ref double air)
+    {
+        bus += weight;
+        if (a.HasRailStation && b.HasRailStation)
+            rail += weight * 0.7;
+        if (a.HasAirport && b.HasAirport)
+            air += weight * 0.4;
+    }
 }
 
 public sealed class GameState
@@ -42,6 +111,12 @@ public sealed class GameState
     public required IReadOnlyList<RailEdge> RailEdges { get; init; }
     public required DemandModel Demand { get; init; }
     public required GameClock Clock { get; init; }
+    public IReadOnlyList<MapLabelDefinition> Labels { get; init; } = [];
+    public string? BackgroundAsset { get; init; }
+    public double? MinLatitude { get; init; }
+    public double? MaxLatitude { get; init; }
+    public double? MinLongitude { get; init; }
+    public double? MaxLongitude { get; init; }
     public Company? Company { get; set; }
     public long NextVehicleId { get; set; } = 1;
     public long NextRouteId { get; set; } = 1;

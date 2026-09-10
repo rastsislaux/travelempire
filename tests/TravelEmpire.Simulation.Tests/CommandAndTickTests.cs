@@ -1,6 +1,8 @@
 using TravelEmpire.Simulation;
 using TravelEmpire.Simulation.Commands;
+using TravelEmpire.Simulation.Content;
 using TravelEmpire.Simulation.Geography;
+using TravelEmpire.Simulation.Presentation;
 
 namespace TravelEmpire.Simulation.Tests;
 
@@ -15,7 +17,6 @@ public class GeoMathTests
     [Fact]
     public void Haversine_known_distance_is_plausible()
     {
-        // Aurel -> Port Haven roughly 180-220 km
         var km = GeoMath.HaversineKm(53.90, 27.57, 54.69, 25.28);
         Assert.InRange(km, 150, 250);
     }
@@ -29,7 +30,7 @@ public class CommandTests
         var sim = BuiltInContent.CreateDefaultGame();
         var before = sim.GetSnapshot().Company!.CashMinor;
 
-        var result = sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.standard") });
+        var result = sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.coach") });
         Assert.True(result.Success, result.ErrorMessage);
 
         var snap = sim.GetSnapshot();
@@ -51,6 +52,38 @@ public class CommandTests
     }
 
     [Fact]
+    public void BuyVehicle_locked_tier_fails_until_cities_served()
+    {
+        var sim = BuiltInContent.CreateDefaultGame();
+        var locked = sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.articulated") });
+        Assert.False(locked.Success);
+        Assert.Equal("vehicle.locked", locked.ErrorCode);
+
+        Assert.True(sim.Apply(new CreateRouteCommand
+        {
+            Name = "A",
+            Mode = TransportMode.Bus,
+            Stops = [new CityId("city.capital"), new CityId("city.university")]
+        }).Success);
+        Assert.True(sim.Apply(new CreateRouteCommand
+        {
+            Name = "B",
+            Mode = TransportMode.Bus,
+            Stops = [new CityId("city.capital"), new CityId("city.port")]
+        }).Success);
+        Assert.True(sim.Apply(new CreateRouteCommand
+        {
+            Name = "C",
+            Mode = TransportMode.Bus,
+            Stops = [new CityId("city.port"), new CityId("city.border")]
+        }).Success);
+
+        Assert.True(sim.GetSnapshot().Company!.CitiesServed >= 3);
+        var unlocked = sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.articulated") });
+        Assert.True(unlocked.Success, unlocked.ErrorMessage);
+    }
+
+    [Fact]
     public void CreateTrainRoute_without_rail_edge_fails()
     {
         var sim = BuiltInContent.CreateDefaultGame();
@@ -69,7 +102,6 @@ public class CommandTests
     public void CreateTrainRoute_missing_rail_link_fails()
     {
         var sim = BuiltInContent.CreateDefaultGame();
-        // industrial and border both have stations but no direct edge
         var result = sim.Apply(new CreateRouteCommand
         {
             Name = "Missing Link",
@@ -100,7 +132,7 @@ public class CommandTests
     public void AssignVehicle_mode_mismatch_fails()
     {
         var sim = BuiltInContent.CreateDefaultGame();
-        Assert.True(sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.standard") }).Success);
+        Assert.True(sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.coach") }).Success);
         Assert.True(sim.Apply(new CreateRouteCommand
         {
             Name = "Sky Link",
@@ -137,7 +169,7 @@ public class TickIntegrationTests
     public void Bus_shuttle_generates_revenue_over_ticks()
     {
         var sim = BuiltInContent.CreateDefaultGame();
-        Assert.True(sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.standard") }).Success);
+        Assert.True(sim.Apply(new BuyVehicleCommand { TypeId = new VehicleTypeId("bus.coach") }).Success);
         Assert.True(sim.Apply(new CreateRouteCommand
         {
             Name = "Aurel–Scholar",
@@ -159,7 +191,6 @@ public class TickIntegrationTests
 
         Assert.True(after.Company!.CumulativePassengers > 0, "Expected passengers to be carried.");
         Assert.True(after.Company.CumulativeRevenueMinor > 0, "Expected revenue to be collected.");
-        // Cash may be above or below post-purchase depending on op costs; revenue path must move money.
         Assert.NotEqual(cashAfterBuy, after.Company.CashMinor);
     }
 
@@ -180,5 +211,78 @@ public class TickIntegrationTests
             Mode = TransportMode.Air,
             Stops = [new CityId("city.capital"), new CityId("city.resort")]
         }).Success);
+    }
+}
+
+public class ContentAndDemandTests
+{
+    [Fact]
+    public void Catalog_has_three_types_per_mode()
+    {
+        var catalog = BuiltInContent.DefaultCatalog();
+        Assert.Equal(3, catalog.Types.Count(t => t.Mode == TransportMode.Bus));
+        Assert.Equal(3, catalog.Types.Count(t => t.Mode == TransportMode.Train));
+        Assert.Equal(3, catalog.Types.Count(t => t.Mode == TransportMode.Air));
+    }
+
+    [Fact]
+    public void Lithuania_pack_has_enough_cities_and_ports()
+    {
+        var pack = BuiltInContent.LithuaniaMapPack();
+        Assert.True(pack.Cities.Count >= 8);
+        Assert.Contains(pack.Cities, c => c.HasSeaport);
+        Assert.Contains(pack.Cities, c => c.HasAirport);
+        Assert.True(pack.RailEdges.Count >= 5);
+
+        var sim = BuiltInContent.CreateGame("lithuania", "Baltijos Linijos");
+        var snap = sim.GetSnapshot();
+        Assert.Equal("lithuania", snap.MapPackId);
+        Assert.Equal(pack.Cities.Count, snap.Cities.Count);
+        Assert.Contains(snap.Cities, c => c.HasSeaport);
+        Assert.NotNull(snap.Cities[0].Demand);
+    }
+
+    [Fact]
+    public void MapPackRegistry_lists_aurelia_and_lithuania()
+    {
+        var packs = MapPackRegistry.ListPacks();
+        Assert.Contains(packs, p => p.Id == "aurelia" && p.IsTutorial);
+        Assert.Contains(packs, p => p.Id == "lithuania" && !p.IsTutorial);
+    }
+
+    [Fact]
+    public void CityPanelViewModel_empire_and_city_states()
+    {
+        var sim = BuiltInContent.CreateDefaultGame();
+        var snap = sim.GetSnapshot();
+        var selection = new UiSelection();
+
+        var empire = CityPanelViewModel.From(snap, selection);
+        Assert.False(empire.HasSelection);
+        Assert.Equal("Empire", empire.HeaderTitle);
+        Assert.Equal("—", empire.GrowthLabel);
+
+        selection.SelectedCityId = "city.port";
+        selection.BuyModeFilter = TransportMode.Bus;
+        var city = CityPanelViewModel.From(snap, selection);
+        Assert.True(city.HasSelection);
+        Assert.Equal("City — Port Haven", city.HeaderTitle);
+        Assert.Equal("Yes", city.PortLabel);
+        Assert.Contains(city.CatalogRows, r => r.Id == "bus.coach");
+        Assert.DoesNotContain(city.CatalogRows, r => r.Mode != TransportMode.Bus);
+    }
+
+    [Fact]
+    public void CityPanelViewModel_buy_disabled_when_unaffordable_or_locked()
+    {
+        var sim = BuiltInContent.CreateDefaultGame();
+        var selection = new UiSelection
+        {
+            BuyModeFilter = TransportMode.Bus,
+            SelectedCatalogTypeId = "bus.articulated"
+        };
+        var vm = CityPanelViewModel.From(sim.GetSnapshot(), selection);
+        Assert.False(vm.BuyEnabled);
+        Assert.Contains("cities", vm.BuyDisabledReason ?? "", StringComparison.OrdinalIgnoreCase);
     }
 }
