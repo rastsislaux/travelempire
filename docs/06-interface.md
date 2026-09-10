@@ -2,6 +2,8 @@
 
 The interface layer is a **Godot 4** project using **C#** scripts. It presents simulation state and translates input into commands. It does not own economy or route legality.
 
+The scene map and components below describe the **MVP prototype**. The next iteration — theme, city panel, map polish, component inventory — is planned in the [UI execution plan](10-ui-execution-plan.md).
+
 ## Responsibilities
 
 | Does | Does not |

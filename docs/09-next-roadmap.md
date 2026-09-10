@@ -18,6 +18,8 @@ MVP is playable; this roadmap focuses on **UI quality**, **catalog/progression d
 
 ## Track 1 — UI toward mockup #1
 
+Buildable detail for this track — scene-by-scene work items, acceptance checks and component inventory — lives in the [UI execution plan](10-ui-execution-plan.md).
+
 ### Design principles (from mockup)
 
 1. **Map is the hero** — first viewport is geography + network, not a control dashboard.
