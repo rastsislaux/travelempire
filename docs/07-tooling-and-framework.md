@@ -4,7 +4,7 @@
 
 | Choice | Detail |
 |--------|--------|
-| Engine | **Godot 4.x** (track a specific minor version in the Godot project when scaffolding) |
+| Engine | **Godot 4.7** .NET (`Godot.NET.Sdk/4.7.2`, `project.godot` features `4.7`) |
 | Language | **C#** (.NET) for simulation and Godot scripts |
 | GDScript | Avoid for game rules; optional for throwaway editor glue only |
 
@@ -14,8 +14,9 @@ Rationale: Godot fits 2D map + UI tooling; C# enables a testable headless simula
 
 | Item | Guidance |
 |------|----------|
-| Runtime | Version required by the chosen Godot 4.x C# build (pin in docs/global.json when project exists) |
-| Solution | `TravelEmpire.sln` spanning Simulation, Godot, Tests |
+| SDK | .NET **8+** (10.x supported). `global.json` pins a minimum of 8.0.100 with `rollForward: latestMajor` so newer installed SDKs are used |
+| Project TFM | `net8.0` for Simulation, Tests, ConsoleHost, and Godot (Godot 4.7 minimum) |
+| Solution | `TravelEmpire.sln` spanning Simulation, Godot, Tests, ConsoleHost |
 | Nullable | Enable nullable reference types in simulation |
 | Style | EditorConfig; prefer records for DTOs/commands |
 

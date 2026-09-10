@@ -1,0 +1,33 @@
+[
+  {
+    "id": "bus.standard",
+    "mode": "bus",
+    "displayName": "Standard Coach",
+    "capacityPassengers": 50,
+    "cruiseSpeedKmh": 80,
+    "purchaseCostMinor": 25000000,
+    "operatingCostPerKmMinor": 80,
+    "operatingCostPerHourMinor": 1500
+  },
+  {
+    "id": "train.regional",
+    "mode": "train",
+    "displayName": "Regional EMU",
+    "capacityPassengers": 220,
+    "cruiseSpeedKmh": 140,
+    "purchaseCostMinor": 180000000,
+    "operatingCostPerKmMinor": 350,
+    "operatingCostPerHourMinor": 8000
+  },
+  {
+    "id": "air.regional_jet",
+    "mode": "air",
+    "displayName": "Regional Jet",
+    "capacityPassengers": 90,
+    "cruiseSpeedKmh": 720,
+    "purchaseCostMinor": 320000000,
+    "operatingCostPerKmMinor": 900,
+    "operatingCostPerHourMinor": 25000,
+    "maxRangeKm": 2500
+  }
+]
